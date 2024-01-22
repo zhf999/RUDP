@@ -1,3 +1,6 @@
+/home/hfzhou/CLionProjects/RUDP/cmake-build-debug/CMakeFiles/libRUDP.dir
 /home/hfzhou/CLionProjects/RUDP/cmake-build-debug/CMakeFiles/RUDP.dir
+/home/hfzhou/CLionProjects/RUDP/cmake-build-debug/CMakeFiles/ClientTest.dir
+/home/hfzhou/CLionProjects/RUDP/cmake-build-debug/CMakeFiles/ServerTest.dir
 /home/hfzhou/CLionProjects/RUDP/cmake-build-debug/CMakeFiles/edit_cache.dir
 /home/hfzhou/CLionProjects/RUDP/cmake-build-debug/CMakeFiles/rebuild_cache.dir

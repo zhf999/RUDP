@@ -15,7 +15,10 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1,
+						2,
+						3
 					]
 				}
 			],
@@ -30,7 +33,10 @@
 					"name" : "RUDP",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1,
+						2,
+						3
 					]
 				}
 			],
@@ -38,9 +44,30 @@
 			[
 				{
 					"directoryIndex" : 0,
+					"id" : "ClientTest::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ClientTest-Debug-bb97f57bc765ff70a343.json",
+					"name" : "ClientTest",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
 					"id" : "RUDP::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-RUDP-Debug-2c508cd6a6a807b8f54a.json",
+					"jsonFile" : "target-RUDP-Debug-989f4b2dadc5cd3252ef.json",
 					"name" : "RUDP",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ServerTest::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ServerTest-Debug-cb24019ea6ae8269b811.json",
+					"name" : "ServerTest",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "libRUDP::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-libRUDP-Debug-3f61f719df67be7d61e1.json",
+					"name" : "libRUDP",
 					"projectIndex" : 0
 				}
 			]

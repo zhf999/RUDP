@@ -41,21 +41,66 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = /home/hfzhou/CLionProjects/RUDP/cmake-build-debug/
 # =============================================================================
+# Object build statements for STATIC_LIBRARY target libRUDP
+
+
+#############################################
+# Order-only phony target for libRUDP
+
+build cmake_object_order_depends_target_libRUDP: phony || CMakeFiles/libRUDP.dir
+
+build CMakeFiles/libRUDP.dir/src/client/RUDP_client.cpp.o: CXX_COMPILER__libRUDP_unscanned_Debug /home/hfzhou/CLionProjects/RUDP/src/client/RUDP_client.cpp || cmake_object_order_depends_target_libRUDP
+  DEP_FILE = CMakeFiles/libRUDP.dir/src/client/RUDP_client.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/hfzhou/CLionProjects/RUDP/include
+  OBJECT_DIR = CMakeFiles/libRUDP.dir
+  OBJECT_FILE_DIR = CMakeFiles/libRUDP.dir/src/client
+
+build CMakeFiles/libRUDP.dir/src/server/RUDP_server.cpp.o: CXX_COMPILER__libRUDP_unscanned_Debug /home/hfzhou/CLionProjects/RUDP/src/server/RUDP_server.cpp || cmake_object_order_depends_target_libRUDP
+  DEP_FILE = CMakeFiles/libRUDP.dir/src/server/RUDP_server.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/hfzhou/CLionProjects/RUDP/include
+  OBJECT_DIR = CMakeFiles/libRUDP.dir
+  OBJECT_FILE_DIR = CMakeFiles/libRUDP.dir/src/server
+
+build CMakeFiles/libRUDP.dir/src/RUDP.cpp.o: CXX_COMPILER__libRUDP_unscanned_Debug /home/hfzhou/CLionProjects/RUDP/src/RUDP.cpp || cmake_object_order_depends_target_libRUDP
+  DEP_FILE = CMakeFiles/libRUDP.dir/src/RUDP.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/hfzhou/CLionProjects/RUDP/include
+  OBJECT_DIR = CMakeFiles/libRUDP.dir
+  OBJECT_FILE_DIR = CMakeFiles/libRUDP.dir/src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target libRUDP
+
+
+#############################################
+# Link the static library liblibRUDP.a
+
+build liblibRUDP.a: CXX_STATIC_LIBRARY_LINKER__libRUDP_Debug CMakeFiles/libRUDP.dir/src/client/RUDP_client.cpp.o CMakeFiles/libRUDP.dir/src/server/RUDP_server.cpp.o CMakeFiles/libRUDP.dir/src/RUDP.cpp.o
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = CMakeFiles/libRUDP.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = liblibRUDP.a
+  TARGET_PDB = libRUDP.a.dbg
+
+# =============================================================================
 # Object build statements for EXECUTABLE target RUDP
 
 
 #############################################
 # Order-only phony target for RUDP
 
-build cmake_object_order_depends_target_RUDP: phony || CMakeFiles/RUDP.dir
+build cmake_object_order_depends_target_RUDP: phony || cmake_object_order_depends_target_libRUDP
 
-build CMakeFiles/RUDP.dir/main.cpp.o: CXX_COMPILER__RUDP_unscanned_Debug /home/hfzhou/CLionProjects/RUDP/main.cpp || cmake_object_order_depends_target_RUDP
-  DEP_FILE = CMakeFiles/RUDP.dir/main.cpp.o.d
+build CMakeFiles/RUDP.dir/src/main.cpp.o: CXX_COMPILER__RUDP_unscanned_Debug /home/hfzhou/CLionProjects/RUDP/src/main.cpp || cmake_object_order_depends_target_RUDP
+  DEP_FILE = CMakeFiles/RUDP.dir/src/main.cpp.o.d
   FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/hfzhou/CLionProjects/RUDP/include
   OBJECT_DIR = CMakeFiles/RUDP.dir
-  OBJECT_FILE_DIR = CMakeFiles/RUDP.dir
-  TARGET_COMPILE_PDB = CMakeFiles/RUDP.dir/
-  TARGET_PDB = RUDP.pdb
+  OBJECT_FILE_DIR = CMakeFiles/RUDP.dir/src
 
 
 # =============================================================================
@@ -65,14 +110,80 @@ build CMakeFiles/RUDP.dir/main.cpp.o: CXX_COMPILER__RUDP_unscanned_Debug /home/h
 #############################################
 # Link the executable RUDP
 
-build RUDP: CXX_EXECUTABLE_LINKER__RUDP_Debug CMakeFiles/RUDP.dir/main.cpp.o
+build RUDP: CXX_EXECUTABLE_LINKER__RUDP_Debug CMakeFiles/RUDP.dir/src/main.cpp.o | liblibRUDP.a || liblibRUDP.a
   FLAGS = -g
+  LINK_LIBRARIES = liblibRUDP.a
   OBJECT_DIR = CMakeFiles/RUDP.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_COMPILE_PDB = CMakeFiles/RUDP.dir/
   TARGET_FILE = RUDP
-  TARGET_PDB = RUDP.pdb
+  TARGET_PDB = RUDP.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target ClientTest
+
+
+#############################################
+# Order-only phony target for ClientTest
+
+build cmake_object_order_depends_target_ClientTest: phony || cmake_object_order_depends_target_libRUDP
+
+build CMakeFiles/ClientTest.dir/src/client/ClientTest.cpp.o: CXX_COMPILER__ClientTest_unscanned_Debug /home/hfzhou/CLionProjects/RUDP/src/client/ClientTest.cpp || cmake_object_order_depends_target_ClientTest
+  DEP_FILE = CMakeFiles/ClientTest.dir/src/client/ClientTest.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/hfzhou/CLionProjects/RUDP/include
+  OBJECT_DIR = CMakeFiles/ClientTest.dir
+  OBJECT_FILE_DIR = CMakeFiles/ClientTest.dir/src/client
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target ClientTest
+
+
+#############################################
+# Link the executable ClientTest
+
+build ClientTest: CXX_EXECUTABLE_LINKER__ClientTest_Debug CMakeFiles/ClientTest.dir/src/client/ClientTest.cpp.o | liblibRUDP.a || liblibRUDP.a
+  FLAGS = -g
+  LINK_LIBRARIES = liblibRUDP.a
+  OBJECT_DIR = CMakeFiles/ClientTest.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = ClientTest
+  TARGET_PDB = ClientTest.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target ServerTest
+
+
+#############################################
+# Order-only phony target for ServerTest
+
+build cmake_object_order_depends_target_ServerTest: phony || cmake_object_order_depends_target_libRUDP
+
+build CMakeFiles/ServerTest.dir/src/server/ServerTest.cpp.o: CXX_COMPILER__ServerTest_unscanned_Debug /home/hfzhou/CLionProjects/RUDP/src/server/ServerTest.cpp || cmake_object_order_depends_target_ServerTest
+  DEP_FILE = CMakeFiles/ServerTest.dir/src/server/ServerTest.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/hfzhou/CLionProjects/RUDP/include
+  OBJECT_DIR = CMakeFiles/ServerTest.dir
+  OBJECT_FILE_DIR = CMakeFiles/ServerTest.dir/src/server
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target ServerTest
+
+
+#############################################
+# Link the executable ServerTest
+
+build ServerTest: CXX_EXECUTABLE_LINKER__ServerTest_Debug CMakeFiles/ServerTest.dir/src/server/ServerTest.cpp.o | liblibRUDP.a || liblibRUDP.a
+  FLAGS = -g
+  LINK_LIBRARIES = liblibRUDP.a
+  OBJECT_DIR = CMakeFiles/ServerTest.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = ServerTest
+  TARGET_PDB = ServerTest.dbg
 
 
 #############################################
@@ -100,6 +211,8 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
+build libRUDP: phony liblibRUDP.a
+
 # =============================================================================
 # Folder targets.
 
@@ -108,7 +221,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /home/hfzhou/CLionProjects/RUDP/cmake-build-debug
 
-build all: phony RUDP
+build all: phony liblibRUDP.a RUDP ClientTest ServerTest
 
 # =============================================================================
 # Built-in targets
@@ -117,14 +230,14 @@ build all: phony RUDP
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/hfzhou/CLionProjects/RUDP/CMakeLists.txt /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCCompiler.cmake.in /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCCompilerABI.c /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXCompiler.cmake.in /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCompilerIdDetection.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCXXCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCompileFeatures.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeFindBinUtils.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeParseImplicitIncludeInfo.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeParseImplicitLinkInfo.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeParseLibraryArchitecture.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystem.cmake.in /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeTestCompilerCommon.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/ADSP-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/ARMCC-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/ARMClang-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/AppleClang-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Borland-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Clang-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Cray-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GHS-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-FindBinUtils.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/HP-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/HP-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IAR-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Intel-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/LCC-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/MSVC-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/NVHPC-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/PGI-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/PathScale-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/SCO-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/TI-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Tasking-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Watcom-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/XL-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/XL-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/zOS-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Internal/FeatureTesting.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Determine-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-C.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Initialize.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/hfzhou/CLionProjects/RUDP/CMakeLists.txt /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-C.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Initialize.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/hfzhou/CLionProjects/RUDP/CMakeLists.txt /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCCompiler.cmake.in /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCCompilerABI.c /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXCompiler.cmake.in /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCompilerIdDetection.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCXXCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCompileFeatures.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeFindBinUtils.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeParseImplicitIncludeInfo.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeParseImplicitLinkInfo.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeParseLibraryArchitecture.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystem.cmake.in /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeTestCompilerCommon.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/ADSP-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/ARMCC-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/ARMClang-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/AppleClang-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Borland-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Clang-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Cray-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GHS-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-FindBinUtils.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/HP-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/HP-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IAR-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Intel-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/LCC-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/MSVC-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/NVHPC-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/PGI-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/PathScale-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/SCO-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/TI-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Tasking-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/Watcom-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/XL-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/XL-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/zOS-C-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Internal/FeatureTesting.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Determine-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-C.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Initialize.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake: phony
+build /home/hfzhou/CLionProjects/RUDP/CMakeLists.txt /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-C.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Initialize.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux.cmake /snap/clion/261/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake: phony
 
 
 #############################################
