@@ -16,7 +16,6 @@ bool RUDP_WaitFor(RUDP_Socket sock, short port)
 
     recvfrom(sock.socket,&rcv_syn,sizeof(rcv_syn),0,(sockaddr*)&sock.addr,&addrLen);
 
-
     if(rcv_syn.header.control.syn==1)
     {
         printf("Receive SYN from %s:%d\n", inet_ntoa(sock.addr.sin_addr), ntohs(sock.addr.sin_port));
@@ -24,6 +23,7 @@ bool RUDP_WaitFor(RUDP_Socket sock, short port)
         RUDP_Packet syn_ack = PrepareSYNACK(seq);
         sendto(sock.socket,&syn_ack,sizeof(syn_ack),0,(sockaddr*)&sock.addr,sizeof(sock.addr));
     }
+    sock.state = syn_ack_send;
     return true;
 }
 
@@ -33,8 +33,8 @@ RUDP_Packet PrepareSYNACK(unsigned int seq)
     bzero(&syn_ack,sizeof(syn_ack));
     syn_ack.header.ack = htonl(seq+1);
     syn_ack.header.seq = htonl(rand() | (rand() << 15) | (rand() << 30));
-    syn_ack.header.control.syn = 1;
-    syn_ack.header.control.ack = 1;
+    syn_ack.header.control.syn = true;
+    syn_ack.header.control.ack = true;
 
     return  syn_ack;
 }

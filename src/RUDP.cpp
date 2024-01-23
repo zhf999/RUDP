@@ -21,12 +21,23 @@ void InitAddr(sockaddr_in *addr, const char *ip, const char *port) {
     addr->sin_port = htons(iport);
 }
 
+void InitAddr(sockaddr_in *addr, const char *ip, short port)
+{
+    memset(addr,0,sizeof(addr));
+    addr->sin_family = AF_INET;
+    if(ip== nullptr)
+        addr->sin_addr.s_addr = INADDR_ANY;
+    else
+        addr->sin_addr.s_addr = inet_addr(ip);
+    addr->sin_port = htons(port);
+}
 
 RUDP_Socket RUDP_Init()
 {
     RUDP_Socket rudpSocket;
     rudpSocket.socket = socket(AF_INET,SOCK_DGRAM,0);
     bzero(&rudpSocket.addr,sizeof(rudpSocket.addr));
+    rudpSocket.state = uninitialized;
     if(rudpSocket.socket>0)
         return rudpSocket;
     else

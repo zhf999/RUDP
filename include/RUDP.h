@@ -13,6 +13,11 @@
 
 #define BODYLEN 1024
 
+enum ConnectState
+{
+    uninitialized,listening,syn_send,syn_ack_send,finished,half_closed,closed
+};
+
 struct ControlFlags
 {
     bool syn:1;
@@ -45,10 +50,15 @@ struct RUDP_Socket
 {
     int socket;
     sockaddr_in addr;
+    ConnectState state;
+    unsigned int seq,ack;
 };
+
 
 void err(const char *);
 void InitAddr(sockaddr_in *addr, const char *ip, const char *port);
+void InitAddr(sockaddr_in *addr, const char *ip, short port);
+
 
 RUDP_Socket RUDP_Init();
 
