@@ -35,7 +35,9 @@ int main(int argc,char *argv[]) {
             err("Bind error!");
         char buf[1024];
         socklen_t addr_len=sizeof(client_addr);
+        getchar();
         int n = recvfrom(recv_sock,(void*)buf,1024,0,(sockaddr*)&client_addr,&addr_len);
+
         buf[n]='\n';
         char ipv4[32];
         inet_ntop(AF_INET,(void*)&client_addr.sin_addr,ipv4,sizeof(ipv4));

@@ -6,24 +6,23 @@
 #include<cstdio>
 #include<cstdlib>
 #include<cstring>
-
+#include<sys/time.h>
+#include "Queue.h"
 #ifndef RUDP_RUDP_H
 #define RUDP_RUDP_H
+
 #pragma  pack(1)
 
 #define BODYLEN 1024
 
 enum ConnectState
 {
-    uninitialized,listening,syn_send,syn_ack_send,finished,half_closed,closed
+    INIT,LISTEN,ESTABLISHED,FINISHED
 };
 
-struct ControlFlags
+enum PacketType
 {
-    bool syn:1;
-    bool ack:1;
-    bool fin:1;
-    bool preserved:5;
+    DATA,SYN,ACK,WND_REQUEST,WND_INFO
 };
 
 struct RUDP_Header
@@ -35,8 +34,8 @@ struct RUDP_Header
     /*
      * control:SYN,ACK,FIN
      */
-    ControlFlags control;
     unsigned char len;
+    PacketType type;
 };
 
 
@@ -46,23 +45,52 @@ struct RUDP_Packet
     unsigned *payload;
 };
 
+
+struct SendNode
+{
+    long send_time;
+    RUDP_Packet packet;
+    SendNode *next;
+};
+
+struct SendQueue
+{
+    int len;
+    SendNode *head;
+    SendNode *tail;
+};
+
 struct RUDP_Socket
 {
     int socket;
     sockaddr_in addr;
     ConnectState state;
-    unsigned int seq,ack;
+    unsigned int seq_number,ack_number;
+    SendQueue sendQueue,rcvQueue,outQueue,ackQueue;
+    int window;
+    int mss;
+    int rto; //  micro second
 };
 
 
 void err(const char *);
 void InitAddr(sockaddr_in *addr, const char *ip, const char *port);
 void InitAddr(sockaddr_in *addr, const char *ip, short port);
+long CurrentTime();
 
+void QueueInit(SendQueue *queue);
+bool isQueueEmpty(SendQueue *queue);
+SendNode* QueueFront(SendQueue *queue);
+void QueuePush(SendQueue *queue,SendNode *node);
+SendNode *MakeNode(RUDP_Packet packet);
 
 RUDP_Socket RUDP_Init();
-
+int RUDP_send(RUDP_Socket *rsock,void* data, unsigned long len);
+void RUDP_Update(RUDP_Socket *rsock);
+void RUDP_resend(RUDP_Socket *rsock);
 
 #pragma pack()
+
+
 #endif //RUDP_RUDP_H
 

@@ -8,7 +8,6 @@
 #define RUDP_RUDP_SERVER_H
 
 // server side
-bool RUDP_WaitFor(RUDP_Socket sock, short port);
-RUDP_Packet PrepareSYNACK(unsigned int seq);
+bool RUDP_WaitFor(RUDP_Socket *sock, short port);
 
 #endif //RUDP_RUDP_SERVER_H

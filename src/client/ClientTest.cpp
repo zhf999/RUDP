@@ -15,5 +15,4 @@ int main()
     RUDP_Socket clientSock = RUDP_Init();
     sockaddr_in addr;
     InitAddr(&addr, "192.168.177.130", "7788");
-    RUDP_Connect(clientSock, &addr);
 }
