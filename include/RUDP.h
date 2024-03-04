@@ -7,17 +7,17 @@
 #include<cstdlib>
 #include<cstring>
 #include<sys/time.h>
-#include "Queue.h"
 #ifndef RUDP_RUDP_H
 #define RUDP_RUDP_H
 
 #pragma  pack(1)
 
 #define BODYLEN 1024
+#define BUFFERLEN 1024*1024
 
 enum ConnectState
 {
-    INIT,LISTEN,ESTABLISHED,FINISHED
+    INIT,LISTEN,ESTABLISHED,HALF_ESTABLISHED,FINISHED
 };
 
 enum PacketType
@@ -42,7 +42,7 @@ struct RUDP_Header
 struct RUDP_Packet
 {
     RUDP_Header header;
-    unsigned *payload;
+    unsigned payload[BODYLEN];
 };
 
 
@@ -65,8 +65,13 @@ struct RUDP_Socket
     int socket;
     sockaddr_in addr;
     ConnectState state;
-    unsigned int seq_number,ack_number;
+    unsigned int seq_number; // the next number to send
+    unsigned int ack_number; // the next seq number to receive i.e. the
     SendQueue sendQueue,rcvQueue,outQueue,ackQueue;
+
+    char rcvBuffer[BUFFERLEN];
+    unsigned int bufferContentSize;
+
     int window;
     int mss;
     int rto; //  micro second
@@ -85,9 +90,13 @@ void QueuePush(SendQueue *queue,SendNode *node);
 SendNode *MakeNode(RUDP_Packet packet);
 
 RUDP_Socket RUDP_Init();
-int RUDP_send(RUDP_Socket *rsock,void* data, unsigned long len);
+int RUDP_SetAddr(RUDP_Socket *sock, sockaddr_in *addr);
+int RUDP_send(RUDP_Socket *rsock, char *data, unsigned long len);
+int RUDP_recv(RUDP_Socket *rsock, char *data, unsigned long len);
 void RUDP_Update(RUDP_Socket *rsock);
-void RUDP_resend(RUDP_Socket *rsock);
+void RUDP_Flush(RUDP_Socket *rsock);
+void RUDP_Resend(RUDP_Socket *rsock);
+void RUDP_PickPacket(RUDP_Socket *rsock);
 
 #pragma pack()
 

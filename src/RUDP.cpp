@@ -2,6 +2,7 @@
 // Created by hfzhou on 24-1-19.
 //
 
+#include <cerrno>
 #include "RUDP.h"
 #include "RUDP_client.h"
 
@@ -33,7 +34,7 @@ SendNode *QueueFront(SendQueue *queue)
     if (isQueueEmpty(queue))
         return nullptr;
     SendNode *res = queue->head->next;
-    queue->head = queue->head->next;
+    queue->head->next = res->next;
     res->next = nullptr;
     return res;
 }
@@ -88,12 +89,27 @@ RUDP_Socket RUDP_Init()
     QueueInit(&rudpSocket.sendQueue);
     QueueInit(&rudpSocket.rcvQueue);
     rudpSocket.window = 32;
+    rudpSocket.mss = 1024;
+    rudpSocket.bufferContentSize = 0;
     return rudpSocket;
 }
 
+int RUDP_SetAddr(RUDP_Socket *sock, sockaddr_in *addr)
+{
+    if(connect(sock->socket,(sockaddr*)addr,sizeof(*addr))==-1)
+    {
+        printf("%d",errno);
+        err("UDP connect error!");
+        return -1;
+    }
+
+    sock->addr = *addr;
+
+    return 1;
+}
 
 
-int RUDP_send(RUDP_Socket *rsock,void* data, unsigned long len)
+int RUDP_send(RUDP_Socket *rsock, char *data, unsigned long len)
 {
     if(rsock->state == INIT)
     {
@@ -102,16 +118,69 @@ int RUDP_send(RUDP_Socket *rsock,void* data, unsigned long len)
             err("Connect error");
         }
     }
-    // TODO
+    char *start = data;
+    long restLen = len;
+
+    while(restLen>0)
+    {
+        RUDP_Packet newPacket;
+        newPacket.header.type = DATA;
+        newPacket.header.seq = htonl(rsock->seq_number);
+        rsock->seq_number += 1;
+
+        unsigned long payLoadLen = restLen>rsock->mss?rsock->mss:restLen;
+
+        newPacket.header.len = payLoadLen;
+        memcpy(newPacket.payload,start,payLoadLen);
+        start += payLoadLen;
+        restLen -= payLoadLen;
+
+        SendNode * newNode = MakeNode(newPacket);
+        QueuePush(&rsock->sendQueue,newNode);
+    }
+
+    RUDP_Update(rsock);
+    return 1;
 }
+
+int RUDP_recv(RUDP_Socket *rsock, char *data, unsigned long len)
+{
+    long restLen = len;
+    while (restLen>0)
+    {
+        if(restLen<=rsock->bufferContentSize)
+        {
+            memcpy(data,rsock->rcvBuffer,restLen);
+            memcpy(rsock->rcvBuffer,rsock->rcvBuffer+len+1,restLen);
+            rsock->bufferContentSize -= restLen;
+            restLen = 0;
+            return len;
+        }
+        else
+        {
+            int readLen = rsock->bufferContentSize;
+            memcpy(data,rsock->rcvBuffer,readLen);
+            memcpy(rsock->rcvBuffer,rsock->rcvBuffer+len+1,readLen);
+            rsock->bufferContentSize = 0;
+            restLen = 0;
+            return readLen;
+            // TODO nonblock
+//            restLen -= readLen;
+//            RUDP_Update(rsock);
+        }
+    }
+}
+
+
 
 void RUDP_Update(RUDP_Socket *rsock)
 {
-    RUDP_resend(rsock);
-    // TODO
+    RUDP_Resend(rsock);
+    RUDP_Flush(rsock);
+    RUDP_PickPacket(rsock);
 }
 
-void RUDP_resend(RUDP_Socket *rsock)
+void RUDP_Resend(RUDP_Socket *rsock)
 {
     long curtime = CurrentTime();
     for(SendNode *cur=rsock->outQueue.head->next;cur!= nullptr;cur=cur->next)
@@ -124,4 +193,35 @@ void RUDP_resend(RUDP_Socket *rsock)
     }
 }
 
+void RUDP_Flush(RUDP_Socket *rsock)
+{
+    while(!isQueueEmpty(&rsock->sendQueue))
+    {
+        SendNode* front = QueueFront(&rsock->sendQueue);
+        front->send_time = CurrentTime();
+        send(rsock->socket,&front->packet,sizeof(front->packet),0);
+        QueuePush(&rsock->outQueue,front);
+    }
+}
+
+void RUDP_PickPacket(RUDP_Socket *rsock)
+{
+    bool success;
+    do{
+        success = false;
+        for(SendNode *cur=rsock->rcvQueue.head->next;cur!= nullptr;cur=cur->next)
+        {
+            if(rsock->ack_number==cur->packet.header.seq)
+            {
+                if(rsock->bufferContentSize+cur->packet.header.len<=BUFFERLEN)
+                {
+                    memcpy(rsock->rcvBuffer+rsock->bufferContentSize,cur->packet.payload,
+                           cur->packet.header.len);
+                    rsock->bufferContentSize += cur->packet.header.len;
+                    success =true;
+                }
+            }
+        }
+    } while (success);
+}
 

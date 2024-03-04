@@ -27,6 +27,8 @@ bool RUDP_Connect(RUDP_Socket *sock) noexcept {
             if(rcv_synack_packet.header.type==ACK&&ack==seq)
             {
                 sock->state = ESTABLISHED;
+                sock->seq_number = seq + 1;
+                sock->ack_number = ack + 1;
                 break;
             }
         }
@@ -50,17 +52,3 @@ RUDP_Packet PrepareESSYN()
 }
 
 
-
-int RUDP_SetAddr(RUDP_Socket *sock, sockaddr_in *addr)
-{
-    if(connect(sock->socket,(sockaddr*)addr,sizeof(*addr))==-1)
-    {
-        printf("%d",errno);
-        err("UDP connect error!");
-        return -1;
-    }
-
-    sock->addr = *addr;
-
-    return 1;
-}

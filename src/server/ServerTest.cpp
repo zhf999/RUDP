@@ -10,5 +10,5 @@ int main()
 {
     srand((unsigned int)time(NULL));
     RUDP_Socket servSock = RUDP_Init();
-    RUDP_WaitFor(servSock,7788);
+    RUDP_WaitFor(&servSock,7788);
 }

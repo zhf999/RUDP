@@ -11,7 +11,7 @@ RUDP_Packet PrepareSYNACK(unsigned int seq);
 bool RUDP_WaitFor(RUDP_Socket *sock, short port)
 {
     sockaddr_in servAddr;
-    InitAddr(&servAddr, nullptr, "7788");
+    InitAddr(&servAddr, nullptr, port);
     if(bind(sock->socket,(sockaddr*)&servAddr,sizeof(servAddr))==-1)
         err("Server bind error!");
     sock->state = LISTEN;
@@ -34,6 +34,9 @@ bool RUDP_WaitFor(RUDP_Socket *sock, short port)
                     return -1;
                 }
                 QueuePush(&sock->outQueue, MakeNode(synack_packet));
+                sock->state = HALF_ESTABLISHED;
+                sock->seq_number = ntohl(synack_packet.header.seq) + 1;
+                sock->ack_number = syn_seq + 1;
                 break;
             }
         }
