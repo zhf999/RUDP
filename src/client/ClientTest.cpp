@@ -12,13 +12,15 @@
 int main()
 {
     srand((unsigned int)time(NULL));
-    RUDP_Socket clientSock = RUDP_Init();
+    RUDP_Socket* clientSock = RUDP_Init();
     sockaddr_in addr;
     InitAddr(&addr, "192.168.177.130", "7788");
-    if(-1== RUDP_SetAddr(&clientSock,&addr))
+    if(-1== RUDP_SetAddr(clientSock,&addr))
     {
         err("SetAddr error!");
     }
+    RUDP_Connect(clientSock);
 
-
+    getchar();
+    RUDP_Close(clientSock);
 }

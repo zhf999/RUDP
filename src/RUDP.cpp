@@ -19,35 +19,51 @@ long CurrentTime()
     return cur.tv_sec*1000+cur.tv_usec/1000;
 }
 
-void QueueInit(SendQueue *queue)
+void ListInit(List *list)
 {
-    queue->len = 0;
-    queue->head = new SendNode;
-    queue->tail = queue->head;
+    list->len = 0;
+    list->head = new ListNode;
+    list->tail = list->head;
 }
-bool isQueueEmpty(SendQueue *queue)
+bool isListEmpty(List *list)
 {
-    return queue->head == queue->tail;
+    return list->head == list->tail;
 }
-SendNode *QueueFront(SendQueue *queue)
+ListNode *ListFront(List *list)
 {
-    if (isQueueEmpty(queue))
+    if (isListEmpty(list))
         return nullptr;
-    SendNode *res = queue->head->next;
-    queue->head->next = res->next;
+    ListNode *res = list->head->next;
+    list->head->next = res->next;
+    res->next->prev = list->head;
     res->next = nullptr;
+    res->prev = nullptr;
+    list->len--;
     return res;
 }
-void QueuePush(SendQueue *queue,SendNode *node)
+void ListAppend(List *list, ListNode *node)
 {
-    queue->tail->next = node;
+    list->len++;
+    list->tail->next = node;
+    node->prev = list->tail;
 }
 
-SendNode *MakeNode(RUDP_Packet packet)
+void ListRemove(List *list, ListNode *node)
 {
-    SendNode *node = new SendNode;
+    list->len--;
+    ListNode *next = node->next, *prev = node->prev;
+    prev->next = node->next;
+    if(next!= nullptr)next->prev = prev;
+    node->next = nullptr;
+    node->prev = nullptr;
+}
+
+ListNode *MakeNode(RUDP_Packet packet)
+{
+    ListNode *node = new ListNode;
     node->send_time = CurrentTime();
     node->next = nullptr;
+    node->prev = nullptr;
     node->packet = packet;
     return node;
 }
@@ -74,25 +90,39 @@ void InitAddr(sockaddr_in *addr, const char *ip, short port)
     addr->sin_port = htons(port);
 }
 
-RUDP_Socket RUDP_Init()
+RUDP_Socket* RUDP_Init()
 {
-    RUDP_Socket rudpSocket;
-    rudpSocket.socket = socket(AF_INET,SOCK_DGRAM|SOCK_NONBLOCK,0);
-    bzero(&rudpSocket.addr,sizeof(rudpSocket.addr));
-    rudpSocket.state = INIT;
-    if(rudpSocket.socket<=0)
+    RUDP_Socket* rudpSocket = new RUDP_Socket;
+    rudpSocket->socket = socket(AF_INET,SOCK_DGRAM|SOCK_NONBLOCK,0);
+    bzero(&rudpSocket->addr,sizeof(rudpSocket->addr));
+    rudpSocket->state = INIT;
+    if(rudpSocket->socket<=0)
         err("RUDP socket init error!");
     //struct timeval timeout={3,0};//3s
     //setsockopt(rudpSocket.socket,SOL_SOCKET,SO_SNDTIMEO,(const char*)&timeout,sizeof(timeout));
     //setsockopt(rudpSocket.socket,SOL_SOCKET,SO_RCVTIMEO,(const char*)&timeout,sizeof(timeout));
 
-    QueueInit(&rudpSocket.sendQueue);
-    QueueInit(&rudpSocket.rcvQueue);
-    rudpSocket.window = 32;
-    rudpSocket.mss = 1024;
-    rudpSocket.bufferContentSize = 0;
+    ListInit(&rudpSocket->sendList);
+    ListInit(&rudpSocket->rcvList);
+    ListInit(&rudpSocket->outList);
+    ListInit(&rudpSocket->ackList);
+    rudpSocket->window = 32;
+    rudpSocket->mss = 1024;
+    rudpSocket->bufferContentSize = 0;
+    rudpSocket->rto = 1000;
+
+    MutexInit(&rudpSocket->sendMutex);
+    MutexInit(&rudpSocket->outMutex);
+    MutexInit(&rudpSocket->rcvMutex);
+    MutexInit(&rudpSocket->ackMutex);
     return rudpSocket;
 }
+
+void RUDP_Close(RUDP_Socket* rsock)
+{
+    delete rsock;
+}
+
 
 int RUDP_SetAddr(RUDP_Socket *sock, sockaddr_in *addr)
 {
@@ -135,8 +165,8 @@ int RUDP_send(RUDP_Socket *rsock, char *data, unsigned long len)
         start += payLoadLen;
         restLen -= payLoadLen;
 
-        SendNode * newNode = MakeNode(newPacket);
-        QueuePush(&rsock->sendQueue,newNode);
+        ListNode * newNode = MakeNode(newPacket);
+        ListAppend(&rsock->sendList, newNode);
     }
 
     RUDP_Update(rsock);
@@ -183,7 +213,7 @@ void RUDP_Update(RUDP_Socket *rsock)
 void RUDP_Resend(RUDP_Socket *rsock)
 {
     long curtime = CurrentTime();
-    for(SendNode *cur=rsock->outQueue.head->next;cur!= nullptr;cur=cur->next)
+    for(ListNode *cur=rsock->outList.head->next; cur != nullptr; cur=cur->next)
     {
         if(curtime-cur->send_time>rsock->rto)
         {
@@ -195,12 +225,12 @@ void RUDP_Resend(RUDP_Socket *rsock)
 
 void RUDP_Flush(RUDP_Socket *rsock)
 {
-    while(!isQueueEmpty(&rsock->sendQueue))
+    while(!isListEmpty(&rsock->sendList))
     {
-        SendNode* front = QueueFront(&rsock->sendQueue);
+        ListNode* front = ListFront(&rsock->sendList);
         front->send_time = CurrentTime();
         send(rsock->socket,&front->packet,sizeof(front->packet),0);
-        QueuePush(&rsock->outQueue,front);
+        ListAppend(&rsock->outList, front);
     }
 }
 
@@ -209,7 +239,7 @@ void RUDP_PickPacket(RUDP_Socket *rsock)
     bool success;
     do{
         success = false;
-        for(SendNode *cur=rsock->rcvQueue.head->next;cur!= nullptr;cur=cur->next)
+        for(ListNode *cur=rsock->rcvList.head->next; cur != nullptr; cur=cur->next)
         {
             if(rsock->ack_number==cur->packet.header.seq)
             {
@@ -225,3 +255,15 @@ void RUDP_PickPacket(RUDP_Socket *rsock)
     } while (success);
 }
 
+void CheckResend(RUDP_Socket *rsock)
+{
+    for(ListNode *cur=rsock->outList.head->next;cur!= nullptr;cur=cur->next)
+    {
+        long cur_time = CurrentTime();
+        if(cur_time-cur->send_time>rsock->rto)
+        {
+            cur->send_time = cur_time;
+            send(rsock->socket,&cur->packet,sizeof(cur->packet),0);
+        }
+    }
+}

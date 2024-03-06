@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "RUDP"
+			"path" : "ServerTest"
 		}
 	],
 	"backtrace" : 1,
@@ -25,7 +25,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 14,
+				"line" : 17,
 				"parent" : 0
 			},
 			{
@@ -74,7 +74,7 @@
 			"id" : "libRUDP::@6890427a1f51a3e7e1df"
 		}
 	],
-	"id" : "RUDP::@6890427a1f51a3e7e1df",
+	"id" : "ServerTest::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -95,8 +95,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "RUDP",
-	"nameOnDisk" : "RUDP",
+	"name" : "ServerTest",
+	"nameOnDisk" : "ServerTest",
 	"paths" : 
 	{
 		"build" : ".",
@@ -117,7 +117,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/main.cpp",
+			"path" : "src/server/ServerTest.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],
