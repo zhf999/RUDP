@@ -7,6 +7,7 @@
 #include<cstdlib>
 #include<cstring>
 #include<sys/time.h>
+#include<semaphore.h>
 #include "utils.h"
 #ifndef RUDP_RUDP_H
 #define RUDP_RUDP_H
@@ -67,9 +68,12 @@ struct RUDP_Socket
     sockaddr_in addr;
     ConnectState state;
     unsigned int seq_number; // the last number to send
-    unsigned int ack_number; // the next seq number to receive i.e. the
+    unsigned int ack_number; // the next ack number to send i.e. the last number to receive
     List sendList,rcvList,outList,ackList;
     pthread_mutex_t sendMutex,outMutex,rcvMutex,ackMutex;
+
+    pthread_t pthread;
+    sem_t mainBlock;
 
     char rcvBuffer[BUFFERLEN];
     unsigned int bufferContentSize;
@@ -97,12 +101,15 @@ void RUDP_Close(RUDP_Socket*);
 int RUDP_SetAddr(RUDP_Socket *sock, sockaddr_in *addr);
 int RUDP_send(RUDP_Socket *rsock, char *data, unsigned long len);
 int RUDP_recv(RUDP_Socket *rsock, char *data, unsigned long len);
+
 void RUDP_Update(RUDP_Socket *rsock);
 void RUDP_Flush(RUDP_Socket *rsock);
 void RUDP_Resend(RUDP_Socket *rsock);
 void RUDP_PickPacket(RUDP_Socket *rsock);
 
 void CheckResend(RUDP_Socket *rsock);
+void CheckInput(RUDP_Socket *rsock);
+void SendACK(RUDP_Socket *rsock, long ack);
 
 #pragma pack()
 

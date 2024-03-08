@@ -20,7 +20,8 @@ int main()
         err("SetAddr error!");
     }
     RUDP_Connect(clientSock);
-
-    getchar();
+    printf("Connection finished!\n");
     RUDP_Close(clientSock);
+
+    return 0;
 }

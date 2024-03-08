@@ -5,25 +5,24 @@
 #include "utils.h"
 
 
-int CreateThread(void*(*func)(void*),void* args)
+pthread_t CreateThread(void*(*func)(void*), void* args)
 {
     pthread_t pt;
     int res = pthread_create(&pt, nullptr,func,args);
     if(res!=0)
     {
         printf("Create thread error! return value=%d\n",res);
-        return -1;
+        return 0;
     }
 
-    res = pthread_detach(pt);
+//    res = pthread_detach(pt);
+//    if(res!=0)
+//    {
+//        printf("Detach thread error! return value=%d\n",res);
+//        return -1;
+//    }
 
-    if(res!=0)
-    {
-        printf("Detach thread error! return value=%d\n",res);
-        return -1;
-    }
-
-    return 1;
+    return pt;
 }
 
 void MutexInit(pthread_mutex_t *mutex)

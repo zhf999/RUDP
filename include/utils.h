@@ -8,7 +8,7 @@
 #ifndef RUDP_UTILS_H
 #define RUDP_UTILS_H
 
-int CreateThread(void*(*func)(void*),void* args);
+pthread_t CreateThread(void*(*func)(void*), void* args);
 void MutexInit(pthread_mutex_t *mutex);
 void MutexWait(pthread_mutex_t *mutex);
 void MutexRelease(pthread_mutex_t *mutex);

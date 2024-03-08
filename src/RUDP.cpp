@@ -46,6 +46,7 @@ void ListAppend(List *list, ListNode *node)
     list->len++;
     list->tail->next = node;
     node->prev = list->tail;
+    list->tail = node;
 }
 
 void ListRemove(List *list, ListNode *node)
@@ -98,9 +99,9 @@ RUDP_Socket* RUDP_Init()
     rudpSocket->state = INIT;
     if(rudpSocket->socket<=0)
         err("RUDP socket init error!");
-    //struct timeval timeout={3,0};//3s
-    //setsockopt(rudpSocket.socket,SOL_SOCKET,SO_SNDTIMEO,(const char*)&timeout,sizeof(timeout));
-    //setsockopt(rudpSocket.socket,SOL_SOCKET,SO_RCVTIMEO,(const char*)&timeout,sizeof(timeout));
+    struct timeval timeout={1,0};//3s
+    setsockopt(rudpSocket->socket,SOL_SOCKET,SO_SNDTIMEO,(const char*)&timeout,sizeof(timeout));
+    setsockopt(rudpSocket->socket,SOL_SOCKET,SO_RCVTIMEO,(const char*)&timeout,sizeof(timeout));
 
     ListInit(&rudpSocket->sendList);
     ListInit(&rudpSocket->rcvList);
@@ -115,11 +116,17 @@ RUDP_Socket* RUDP_Init()
     MutexInit(&rudpSocket->outMutex);
     MutexInit(&rudpSocket->rcvMutex);
     MutexInit(&rudpSocket->ackMutex);
+
+    sem_init(&rudpSocket->mainBlock,0,0);
     return rudpSocket;
 }
 
 void RUDP_Close(RUDP_Socket* rsock)
 {
+    int res = pthread_cancel(rsock->pthread);
+    if(res!=0)
+        err("Cancel thread fail!\n");
+    pthread_join(rsock->pthread, nullptr);
     delete rsock;
 }
 
@@ -257,6 +264,7 @@ void RUDP_PickPacket(RUDP_Socket *rsock)
 
 void CheckResend(RUDP_Socket *rsock)
 {
+    MutexWait(&rsock->outMutex);
     for(ListNode *cur=rsock->outList.head->next;cur!= nullptr;cur=cur->next)
     {
         long cur_time = CurrentTime();
@@ -264,6 +272,37 @@ void CheckResend(RUDP_Socket *rsock)
         {
             cur->send_time = cur_time;
             send(rsock->socket,&cur->packet,sizeof(cur->packet),0);
+            printf("Resend packet!\n");
         }
     }
+    MutexRelease(&rsock->outMutex);
+}
+
+void CheckInput(RUDP_Socket *rsock)
+{
+    RUDP_Packet temp;
+    int res = recv(rsock->socket, &temp, sizeof(temp), 0);
+    if(res>0)
+    {
+        PacketType type = temp.header.type;
+        if(type==DATA)
+        {
+
+        }
+        else if(type==ACK)
+        {
+
+        }
+        // TODO finish more selection for input packet
+    }
+}
+
+void SendACK(RUDP_Socket *rsock,long ack)
+{
+    RUDP_Packet packet;
+    bzero(&packet, sizeof(packet));
+    packet.header.len = 0;
+    packet.header.type = ACK;
+    packet.header.ack = htonl(ack);
+    send(rsock->socket,&packet,sizeof(packet),0);
 }
