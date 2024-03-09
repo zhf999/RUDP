@@ -24,7 +24,7 @@ enum ConnectState
 
 enum PacketType
 {
-    DATA,SYN,ACK,WND_REQUEST,WND_INFO
+    DATA,SYN,SYNACK,ACK,WND_REQUEST,WND_INFO
 };
 
 struct RUDP_Header
@@ -110,6 +110,7 @@ void RUDP_PickPacket(RUDP_Socket *rsock);
 void CheckResend(RUDP_Socket *rsock);
 void CheckInput(RUDP_Socket *rsock);
 void SendACK(RUDP_Socket *rsock, long ack);
+void CheckACK(RUDP_Socket *rsock,long ack);
 
 #pragma pack()
 

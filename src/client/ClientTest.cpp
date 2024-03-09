@@ -11,6 +11,9 @@
 
 int main()
 {
+    SetFileLogLevel(DEBUG, true);
+    SetTerminalLogLevel(INFO);
+
     srand((unsigned int)time(NULL));
     RUDP_Socket* clientSock = RUDP_Init();
     sockaddr_in addr;
@@ -21,7 +24,9 @@ int main()
     }
     RUDP_Connect(clientSock);
     printf("Connection finished!\n");
-    RUDP_Close(clientSock);
 
+    getchar();
+    RUDP_Close(clientSock);
+    LogClose();
     return 0;
 }

@@ -40,7 +40,7 @@ void* ServerLoop(void* thread_sock)
         }
         else if(rsock->state==ESTABLISHED)
         {
-            printf("Now start data transferring.\n");
+            CheckInput(rsock);
         }
     }
 }
@@ -119,7 +119,7 @@ RUDP_Packet PrepareSYNACK(unsigned int seq)
     bzero(&syn_ack,sizeof(syn_ack));
     syn_ack.header.ack = htonl(seq);
     syn_ack.header.seq = htonl(rand() | (rand() << 15) | (rand() << 30));
-    syn_ack.header.type = ACK;
+    syn_ack.header.type = SYNACK;
 
     return  syn_ack;
 }

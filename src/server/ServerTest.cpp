@@ -12,6 +12,7 @@ int main()
     RUDP_Socket *servSock = RUDP_Init();
     RUDP_WaitFor(servSock,7788);
     printf("Connection finished.\n");
+    getchar();
     RUDP_Close(servSock);
     return 0;
 }

@@ -27,21 +27,24 @@ void* ClientLoop(void *thread_sock)
             int res = recv(rsock->socket,&temp,sizeof(temp),0);
             if(res>0)
             {
-                if(temp.header.type==ACK)
+                if(temp.header.type==SYNACK)
                 {
                     long ack = ntohl(temp.header.ack);
-                    for(ListNode *p=rsock->outList.head->next;p!= nullptr;p=p->next)
-                        if(htonl(p->packet.header.seq)==ack)
-                            ListRemove(&rsock->outList,p);
                     if(ack==rsock->seq_number)
                     {
+                        CheckACK(rsock,ack);
                         printf("Receive SYN ACK packet!\n");
                         rsock->ack_number = ntohl(temp.header.seq);
                         SendACK(rsock,rsock->ack_number);
+                        rsock->state = ESTABLISHED;
                         sem_post(&rsock->mainBlock);
                     }
                 }
             }
+        }
+        else if (rsock->state==ESTABLISHED)
+        {
+            CheckInput(rsock);
         }
         //printf("Now in thread loop:\n");
     }

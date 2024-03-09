@@ -289,13 +289,28 @@ void CheckInput(RUDP_Socket *rsock)
         {
 
         }
-        else if(type==ACK)
+        else if(type==SYNACK)
         {
-
+            long ack = ntohl(temp.header.ack);
+            if(ack==rsock->seq_number)
+            {
+                CheckACK(rsock,ack);
+                printf("Receive SYN ACK packet!2\n");
+                rsock->ack_number = ntohl(temp.header.seq);
+                SendACK(rsock,rsock->ack_number);
+            }
         }
         // TODO finish more selection for input packet
     }
 }
+
+void CheckACK(RUDP_Socket *rsock,long ack)
+{
+    for(ListNode *p=rsock->outList.head->next;p!= nullptr;p=p->next)
+        if(htonl(p->packet.header.seq)<=ack)
+            ListRemove(&rsock->outList,p);
+}
+
 
 void SendACK(RUDP_Socket *rsock,long ack)
 {

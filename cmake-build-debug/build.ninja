@@ -115,15 +115,15 @@ build CMakeFiles/RUDP.dir/src/main.cpp.o: CXX_COMPILER__RUDP_unscanned_Debug /ho
 
 
 #############################################
-# Link the executable RUDP
+# Link the executable bin/RUDP
 
-build RUDP: CXX_EXECUTABLE_LINKER__RUDP_Debug CMakeFiles/RUDP.dir/src/main.cpp.o | liblibRUDP.a || liblibRUDP.a
+build bin/RUDP: CXX_EXECUTABLE_LINKER__RUDP_Debug CMakeFiles/RUDP.dir/src/main.cpp.o | liblibRUDP.a || liblibRUDP.a
   FLAGS = -g
   LINK_LIBRARIES = liblibRUDP.a
   OBJECT_DIR = CMakeFiles/RUDP.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = RUDP
+  TARGET_FILE = bin/RUDP
   TARGET_PDB = RUDP.dbg
 
 # =============================================================================
@@ -148,15 +148,15 @@ build CMakeFiles/ClientTest.dir/src/client/ClientTest.cpp.o: CXX_COMPILER__Clien
 
 
 #############################################
-# Link the executable ClientTest
+# Link the executable bin/ClientTest
 
-build ClientTest: CXX_EXECUTABLE_LINKER__ClientTest_Debug CMakeFiles/ClientTest.dir/src/client/ClientTest.cpp.o | liblibRUDP.a || liblibRUDP.a
+build bin/ClientTest: CXX_EXECUTABLE_LINKER__ClientTest_Debug CMakeFiles/ClientTest.dir/src/client/ClientTest.cpp.o | liblibRUDP.a || liblibRUDP.a
   FLAGS = -g
   LINK_LIBRARIES = liblibRUDP.a
   OBJECT_DIR = CMakeFiles/ClientTest.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = ClientTest
+  TARGET_FILE = bin/ClientTest
   TARGET_PDB = ClientTest.dbg
 
 # =============================================================================
@@ -181,16 +181,49 @@ build CMakeFiles/ServerTest.dir/src/server/ServerTest.cpp.o: CXX_COMPILER__Serve
 
 
 #############################################
-# Link the executable ServerTest
+# Link the executable bin/ServerTest
 
-build ServerTest: CXX_EXECUTABLE_LINKER__ServerTest_Debug CMakeFiles/ServerTest.dir/src/server/ServerTest.cpp.o | liblibRUDP.a || liblibRUDP.a
+build bin/ServerTest: CXX_EXECUTABLE_LINKER__ServerTest_Debug CMakeFiles/ServerTest.dir/src/server/ServerTest.cpp.o | liblibRUDP.a || liblibRUDP.a
   FLAGS = -g
   LINK_LIBRARIES = liblibRUDP.a
   OBJECT_DIR = CMakeFiles/ServerTest.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = ServerTest
+  TARGET_FILE = bin/ServerTest
   TARGET_PDB = ServerTest.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target LogTest
+
+
+#############################################
+# Order-only phony target for LogTest
+
+build cmake_object_order_depends_target_LogTest: phony || cmake_object_order_depends_target_libRUDP
+
+build CMakeFiles/LogTest.dir/src/Test/LogTest.cpp.o: CXX_COMPILER__LogTest_unscanned_Debug /home/hfzhou/CLionProjects/RUDP/src/Test/LogTest.cpp || cmake_object_order_depends_target_LogTest
+  DEP_FILE = CMakeFiles/LogTest.dir/src/Test/LogTest.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/hfzhou/CLionProjects/RUDP/include
+  OBJECT_DIR = CMakeFiles/LogTest.dir
+  OBJECT_FILE_DIR = CMakeFiles/LogTest.dir/src/Test
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target LogTest
+
+
+#############################################
+# Link the executable bin/LogTest
+
+build bin/LogTest: CXX_EXECUTABLE_LINKER__LogTest_Debug CMakeFiles/LogTest.dir/src/Test/LogTest.cpp.o | liblibRUDP.a || liblibRUDP.a
+  FLAGS = -g
+  LINK_LIBRARIES = liblibRUDP.a
+  OBJECT_DIR = CMakeFiles/LogTest.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = bin/LogTest
+  TARGET_PDB = LogTest.dbg
 
 
 #############################################
@@ -218,6 +251,14 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
+build ClientTest: phony bin/ClientTest
+
+build LogTest: phony bin/LogTest
+
+build RUDP: phony bin/RUDP
+
+build ServerTest: phony bin/ServerTest
+
 build libRUDP: phony liblibRUDP.a
 
 # =============================================================================
@@ -228,7 +269,7 @@ build libRUDP: phony liblibRUDP.a
 #############################################
 # Folder: /home/hfzhou/CLionProjects/RUDP/cmake-build-debug
 
-build all: phony liblibRUDP.a RUDP ClientTest ServerTest
+build all: phony liblibRUDP.a bin/RUDP bin/ClientTest bin/ServerTest bin/LogTest
 
 # =============================================================================
 # Built-in targets
