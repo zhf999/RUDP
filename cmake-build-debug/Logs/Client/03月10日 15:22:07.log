@@ -1,0 +1,14 @@
+15:22:07 Init RUDP Socket successfully!
+15:22:07 The Address has been inited to 192.168.177.130:7788
+15:22:07 Start connection.
+15:22:07 Send a SYN to peer. seq=3120560142
+15:22:08 BACK: Resend packet: seq = 3120560142
+15:22:09 BACK: Resend packet: seq = 3120560142
+15:22:10 BACK: Resend packet: seq = 3120560142
+15:22:11 BACK: Resend packet: seq = 3120560142
+15:22:12 BACK: Resend packet: seq = 3120560142
+15:22:13 BACK: Resend packet: seq = 3120560142
+15:22:13 BACK: Remove packet: seq=3120560142 from outList
+15:22:13 BACK: Receive a SYNACK from peer. seq=3468304224, ack=3120560142
+15:22:13 Send a ACK=3468304224.
+15:22:50 RUDP socket has been Closed.

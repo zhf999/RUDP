@@ -1,0 +1,6 @@
+15:47:08 Init RUDP Socket successfully!
+15:47:08 Server start listening at port 7788
+15:47:08 BACK: receive SYN from peer, seq=1457431475
+15:47:08 BACK: send ACK to peer, seq=1952426337 ack=1457431475
+15:47:08 BACK: receive ACK from peer, ack=1952426337
+15:47:25 RUDP socket has been Closed.

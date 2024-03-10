@@ -15,7 +15,7 @@
 #pragma  pack(1)
 
 #define BODYLEN 1024
-#define BUFFERLEN 1024*1024
+#define BUFFERSIZE 1024*1024
 
 enum ConnectState
 {
@@ -75,8 +75,8 @@ struct RUDP_Socket
     pthread_t pthread;
     sem_t mainBlock;
 
-    char rcvBuffer[BUFFERLEN];
-    unsigned int bufferContentSize;
+    char rcvBuffer[BUFFERSIZE];
+    unsigned int rcvBufferLen;
 
     int window;
     int mss;
@@ -107,6 +107,7 @@ void RUDP_Flush(RUDP_Socket *rsock);
 void RUDP_Resend(RUDP_Socket *rsock);
 void RUDP_PickPacket(RUDP_Socket *rsock);
 
+void SendRawPacket(RUDP_Socket *rsock, RUDP_Packet packet);
 void CheckResend(RUDP_Socket *rsock);
 void CheckInput(RUDP_Socket *rsock);
 void SendACK(RUDP_Socket *rsock, long ack);

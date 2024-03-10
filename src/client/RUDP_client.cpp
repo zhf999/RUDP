@@ -10,11 +10,10 @@
 
 void* ClientLoop(void *thread_sock);
 RUDP_Packet PrepareESSYN();
-RUDP_Packet PrepareESAck(unsigned int seq, unsigned int ack);
+void VerifyEstablishSYNACK(RUDP_Socket *, RUDP_Packet);
 
 void* ClientLoop(void *thread_sock)
 {
-
     RUDP_Socket* rsock = (RUDP_Socket*)thread_sock;
     while(true)
     {
@@ -23,46 +22,49 @@ void* ClientLoop(void *thread_sock)
             // try to read from
             // repeatedly send the SYN packet
             CheckResend(rsock);
-            RUDP_Packet temp;
-            int res = recv(rsock->socket,&temp,sizeof(temp),0);
-            if(res>0)
+            RUDP_Packet rcv_syanck_packet;
+            int res = recv(rsock->socket, &rcv_syanck_packet, sizeof(rcv_syanck_packet), 0);
+            if(res>0 && rcv_syanck_packet.header.type == SYNACK)
             {
-                if(temp.header.type==SYNACK)
-                {
-                    long ack = ntohl(temp.header.ack);
-                    if(ack==rsock->seq_number)
-                    {
-                        CheckACK(rsock,ack);
-                        printf("Receive SYN ACK packet!\n");
-                        rsock->ack_number = ntohl(temp.header.seq);
-                        SendACK(rsock,rsock->ack_number);
-                        rsock->state = ESTABLISHED;
-                        sem_post(&rsock->mainBlock);
-                    }
-                }
+                VerifyEstablishSYNACK(rsock, rcv_syanck_packet);
             }
         }
         else if (rsock->state==ESTABLISHED)
         {
             CheckInput(rsock);
+            CheckResend(rsock);
         }
         //printf("Now in thread loop:\n");
     }
 
 }
 
+void VerifyEstablishSYNACK(RUDP_Socket *rsock, RUDP_Packet temp)
+{
+    long ack = ntohl(temp.header.ack);
+    if(ack==rsock->seq_number)
+    {
+        CheckACK(rsock,ack);
+        MyLog(DEBUG,"BACK: Receive a SYNACK from peer. seq=%ld, ack=%ld",ntohl(temp.header.seq),ack);
+        rsock->ack_number = ntohl(temp.header.seq);
+        rsock->state = ESTABLISHED;
+        SendACK(rsock,rsock->ack_number);
+        sem_post(&rsock->mainBlock);
+    }
+}
+
+
 
 bool RUDP_Connect(RUDP_Socket *sock) noexcept {
-    printf("Start Connection\n");
+    MyLog(INFO,"Start connection.");
     RUDP_Packet syn_packet = PrepareESSYN();
     int res = 0;
 
     sock->pthread = CreateThread(ClientLoop,sock);
 
     sock->seq_number = ntohl(syn_packet.header.seq);
-    send(sock->socket,&syn_packet,sizeof(syn_packet),0);
-    printf("Send SYN\n");
-    ListAppend(&sock->outList, MakeNode(syn_packet));
+    MyLog(DEBUG,"Send a SYN to peer. seq=%ld",ntohl(syn_packet.header.seq));
+    SendRawPacket(sock, syn_packet);
     sem_wait(&sock->mainBlock);
     return true;
 }

@@ -12,7 +12,7 @@
 int main()
 {
     SetFileLogLevel(DEBUG, true);
-    SetTerminalLogLevel(INFO);
+    SetTerminalLogLevel(DEBUG);
 
     srand((unsigned int)time(NULL));
     RUDP_Socket* clientSock = RUDP_Init();

@@ -68,8 +68,8 @@ void SetFileLogLevel(LogLevel level,bool isClient=true)
 }
 void MyLog(LogLevel level,const char* str, ...)
 {
-    char fmt[50];
-    char head[20];
+    char fmt[100];
+    char head[30];
     time_t cur;
     time(&cur);
     strftime(head,sizeof(head),"%H:%M:%S", localtime(&cur));
@@ -79,7 +79,7 @@ void MyLog(LogLevel level,const char* str, ...)
     vsprintf(fmt,str,args);
     va_end(args);
 
-    char term[50],file[50];
+    char term[200],file[200];
 
     sprintf(term,"%s %s%s\n",head,TITLES[level],fmt);
     sprintf(file,"%s %s\n",head,fmt);
